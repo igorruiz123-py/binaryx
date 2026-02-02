@@ -1,0 +1,6 @@
+Esse arquivo refere se ao significado dos códigos de erro dos comandos.
+
+Erro 310: "not decimal." (entrada obrigatória de número decimal)
+Erro 320: "not hexadecimal" (entrada obrigatória de número hexadecimal)
+Erro 330: "not binary" (entrada obrigatória de número binário)
+Erro 340: "unknown command" (entrada de comando desconhecido)

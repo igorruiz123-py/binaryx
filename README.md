@@ -32,7 +32,7 @@ Na página do repositório do projeto do github, acesse:
 
 ```Code -> Download ZIP ```
 
-### Linux e MacOS:
+### Instalação Linux e MacOS:
 
 No diretório do projeto execute os seguintes comandos:
 
@@ -46,7 +46,7 @@ Veja se o programa foi adicionado ao PATH (se nenhum erro for disparado, o progr
 
 ```which binaryx```
 
-### Windows (powershell):
+### Instalação Windows (powershell):
 
 No diretório do projeto execute os seguintes comandos:
 

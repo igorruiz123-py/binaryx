@@ -104,7 +104,7 @@ Veja se o programa foi adicionado ao PATH (se nenhum erro for disparado, o progr
 
 Assim que o programa estar adicionado ao PATH do sistema, para executa-lo é simples, abra um terminal, ou se estiver no Windows, abra o powershell ou o cmd e a estrutura do comando segue o padrão:
 
-"<nome do programa> <comando de conversão> <número a ser convertido> <base de origem> <base de destino>"
+"[nome do programa] [comando de conversão] [número a ser convertido] [base de origem] [base de destino]"
 
 Exemplos:
 

@@ -123,5 +123,5 @@ Veja mais em: docs/error_codes.txt
 ## Tecnologias utilizadas:
 
 <p>
-  <img src="assets/c.png" width="100" height="100"/>  <img src="assets/bash.png" width="200" height="200"/>  <img src="assets/makefile.png" width="200" height="200"/>   <img src="assets/linux.png" width="100" height="100"/>   <img src="assets/powershell.png" width="200" height="200"/>
+  <img src="assets/c.png" width="100" height="100"/>  <img src="assets/bash.png" width="200" height="200"/>  <img src="assets/makefile.png" width="200" height="200"/>   <img src="assets/linux.png" width="200" height="200"/>   <img src="assets/powershell.png" width="100" height="100"/>
 </p>  

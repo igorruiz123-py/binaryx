@@ -2,11 +2,21 @@ param (
     [string]$Action = "all"
 )
 
+# ===== GARANTE EXECUÇÃO NA PASTA DO SCRIPT =====
+$ROOT_DIR = $PSScriptRoot
+Set-Location $ROOT_DIR
+
+# ===== CRIA output/bin SE NÃO EXISTIR =====
+$BIN_DIR = Join-Path $ROOT_DIR "output/bin"
+
+if (-not (Test-Path $BIN_DIR)) {
+    New-Item -ItemType Directory -Path $BIN_DIR -Force | Out-Null
+}
+
 # ===== CONFIGURAÇÕES (equivalente ao Makefile) =====
 $CC = "gcc"
 $CFLAGS = @("-Ilibs", "-Wall", "-Wextra")
 
-$BIN_DIR = "output/bin"
 $SRCS = @(
     "src/bin.c",
     "src/dec.c",
@@ -14,28 +24,21 @@ $SRCS = @(
     "src/main.c"
 )
 
-$EXE_PATH = "$BIN_DIR/binaryx.exe"
+$EXE_PATH = Join-Path $BIN_DIR "binaryx.exe"
 
 # ===== FUNÇÕES =====
 
-function Ensure-BinDir {
-    if (-not (Test-Path $BIN_DIR)) {
-        New-Item -ItemType Directory -Path $BIN_DIR | Out-Null
-    }
-}
-
 function Build {
-    Ensure-BinDir
     $objs = @()
 
     foreach ($src in $SRCS) {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($src)
-        $obj = "$BIN_DIR/$name.o"
+        $obj = Join-Path $BIN_DIR "$name.o"
 
         Write-Host "Compiling $src"
         & $CC @CFLAGS -c $src -o $obj
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "Erro on compilation." -ForegroundColor Red
+            Write-Host "Error on compilation." -ForegroundColor Red
             exit 1
         }
 
@@ -49,13 +52,13 @@ function Build {
         exit 1
     }
 
-    Write-Host "Build executed succesfully!" -ForegroundColor Green
+    Write-Host "Build executed successfully!" -ForegroundColor Green
 }
 
 function Clean {
-    Remove-Item "$BIN_DIR/*.o" -ErrorAction SilentlyContinue
+    Remove-Item (Join-Path $BIN_DIR "*.o") -ErrorAction SilentlyContinue
     Remove-Item $EXE_PATH -ErrorAction SilentlyContinue
-    Write-Host "Clean executed succesfully!."
+    Write-Host "Clean executed successfully!"
 }
 
 function Install {
@@ -64,16 +67,15 @@ function Install {
         exit 1
     }
 
-    $binPath = (Resolve-Path $BIN_DIR).Path
     $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 
-    if ($oldPath -notlike "*$binPath*") {
+    if ($oldPath -notlike "*$BIN_DIR*") {
         [Environment]::SetEnvironmentVariable(
             "PATH",
-            "$oldPath;$binPath",
+            "$oldPath;$BIN_DIR",
             "User"
         )
-        Write-Host "binaryx installed at user PATH."
+        Write-Host "binaryx installed in user PATH."
         Write-Host "Close and reopen the terminal to use `binaryx`."
     } else {
         Write-Host "binaryx is already on PATH."
@@ -81,11 +83,10 @@ function Install {
 }
 
 function Uninstall {
-    $binPath = (Resolve-Path $BIN_DIR).Path
     $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 
-    if ($oldPath -like "*$binPath*") {
-        $newPath = ($oldPath -split ';' | Where-Object { $_ -ne $binPath }) -join ';'
+    if ($oldPath -like "*$BIN_DIR*") {
+        $newPath = ($oldPath -split ';' | Where-Object { $_ -ne $BIN_DIR }) -join ';'
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
         Write-Host "binaryx removed from PATH."
     } else {

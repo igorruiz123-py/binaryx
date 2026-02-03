@@ -2,10 +2,7 @@ Esse arquivo refere se aos comandos do programa binaryx e a sintaxe dos comandos
 
 Comandos disponiveis:   
 
-1. binaryx
-2. help
-3. convert
-4. mklog
+1. convert
 
 Bases númericas disponiveis:
 
@@ -13,32 +10,6 @@ Bases númericas disponiveis:
 2. Binário
 3. Hexadecimal
 
-Estrutura do comando "binaryx":
-
-"binaryx" | output: [
-
-    "binaryx is a Command Line Interface (CLI) tool developed by Igor Ruiz 
-    that allows users to convert numbers between hexadecimal, decimal, 
-    and binary representations.
-
-    For usage instructions and detailed examples, please refer to the 
-    documentation at <documentation>.
-]
-
-Estrutura do comando "help":
-
-"binaryx help"
-
-BinaryX - Numeric bases convertor
-
-Usage:
-  binaryx convert <value> <origin_base> <destiny_base>
-  binaryx mklog
-
-Available bases:
-  dec: decimal
-  bin: binário
-  hex: hexadecimal
 
 Estrutura do comando "convert":
 
@@ -48,19 +19,11 @@ Estrutura do comando "convert":
 <base_1> -> base numérica de início do número 
 <base_2> -> base númerica de destino do número
 
-hex -> hexadecimal
-bin -> binary
-dec -> decimal
-
 Exemplos:
 
-1. "binaryx convert 10 dec bin" | output: 1010
-2. "binaryx convert 1010 bin dec" | output: 10
-3. "binaryx convert 10 dec hex" | output: A
-4. "binaryx convert A hex dec" | output: 10
-5. "binaryx convert 1010 bin hex" | output: A
-6. "binaryx convert A hex bin" | output: 1010
-
-Estrutura do comando "mklog":
-
-"binaryx mklog" | output: output.log generated succesfully
+1. "binaryx convert 10 decimal binary" | output: 1010
+2. "binaryx convert 1010 binary decimal" | output: 10
+3. "binaryx convert 10 decimal hexadecimal" | output: A
+4. "binaryx convert A hexadecimal decimal" | output: 10
+5. "binaryx convert 1010 binary hexadecimal" | output: A
+6. "binaryx convert A hexadecimal binary" | output: 1010

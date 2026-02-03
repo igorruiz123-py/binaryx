@@ -1,10 +1,10 @@
 param (
-    [string]$Target = "all"
+    [string]$Action = "all"
 )
 
-# ==== VARIÁVEIS (equivalentes ao Makefile) ====
+# ===== CONFIGURAÇÕES (equivalente ao Makefile) =====
 $CC = "gcc"
-$CFLAGS = "-Ilibs -Wall -Wextra"
+$CFLAGS = @("-Ilibs", "-Wall", "-Wextra")
 
 $BIN_DIR = "output/bin"
 $SRCS = @(
@@ -14,9 +14,9 @@ $SRCS = @(
     "src/main.c"
 )
 
-$TARGET = "$BIN_DIR/binaryx.exe"
+$EXE_PATH = "$BIN_DIR/binaryx.exe"
 
-# ==== FUNÇÕES ====
+# ===== FUNÇÕES =====
 
 function Ensure-BinDir {
     if (-not (Test-Path $BIN_DIR)) {
@@ -32,35 +32,35 @@ function Build {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($src)
         $obj = "$BIN_DIR/$name.o"
 
-        Write-Host "Compilando $src"
-        & $CC $CFLAGS -c $src -o $obj
-        if ($LASTEXITCODE -ne 0) { exit 1 }
+        Write-Host "Compiling $src"
+        & $CC @CFLAGS -c $src -o $obj
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Erro on compilation." -ForegroundColor Red
+            exit 1
+        }
 
         $objs += $obj
     }
 
-    Write-Host "Linkando $TARGET"
-    & $CC $objs -o $TARGET
-    if ($LASTEXITCODE -ne 0) { exit 1 }
+    Write-Host "Linking $EXE_PATH"
+    & $CC $objs -o $EXE_PATH
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error on linking." -ForegroundColor Red
+        exit 1
+    }
 
-    Write-Host "Build concluído com sucesso!" -ForegroundColor Green
+    Write-Host "Build executed succesfully!" -ForegroundColor Green
 }
 
 function Clean {
-    if (Test-Path "$BIN_DIR/*.o") {
-        Remove-Item "$BIN_DIR/*.o" -Force
-    }
-
-    if (Test-Path $TARGET) {
-        Remove-Item $TARGET -Force
-    }
-
-    Write-Host "Clean finalizado."
+    Remove-Item "$BIN_DIR/*.o" -ErrorAction SilentlyContinue
+    Remove-Item $EXE_PATH -ErrorAction SilentlyContinue
+    Write-Host "Clean executed succesfully!."
 }
 
 function Install {
-    if (-not (Test-Path $TARGET)) {
-        Write-Host "Executável não encontrado. Rode o build primeiro." -ForegroundColor Yellow
+    if (-not (Test-Path $EXE_PATH)) {
+        Write-Host "Executable not found! Run build first." -ForegroundColor Yellow
         exit 1
     }
 
@@ -73,10 +73,10 @@ function Install {
             "$oldPath;$binPath",
             "User"
         )
-        Write-Host "binaryx instalado (PATH atualizado)."
-        Write-Host "Reabra o terminal para usar `binaryx`."
+        Write-Host "binaryx installed at user PATH."
+        Write-Host "Close and reopen the terminal to use `binaryx`."
     } else {
-        Write-Host "binaryx já está instalado."
+        Write-Host "binaryx is already on PATH."
     }
 }
 
@@ -87,21 +87,21 @@ function Uninstall {
     if ($oldPath -like "*$binPath*") {
         $newPath = ($oldPath -split ';' | Where-Object { $_ -ne $binPath }) -join ';'
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-        Write-Host "binaryx removido do PATH."
+        Write-Host "binaryx removed from PATH."
     } else {
-        Write-Host "binaryx não está instalado."
+        Write-Host "binaryx is not installed."
     }
 }
 
-# ==== DISPATCH (equivalente aos targets do Make) ====
+# ===== DISPATCH (targets) =====
 
-switch ($Target) {
+switch ($Action) {
     "all"       { Build }
     "clean"     { Clean }
     "install"   { Install }
     "uninstall" { Uninstall }
     default {
-        Write-Host "Target inválido: $Target"
+        Write-Host "Invalid target: $Action"
         Write-Host "Use: all | clean | install | uninstall"
     }
 }
